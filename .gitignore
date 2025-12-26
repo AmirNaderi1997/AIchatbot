@@ -1,0 +1,7 @@
+# Secrets
+config.js
+.env
+
+# OS files
+.DS_Store
+node_modules/
