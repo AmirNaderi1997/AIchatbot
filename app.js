@@ -2,7 +2,7 @@ const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/
 
 // This is your OBFUSCATED Gemini API key (Base64 + Reversed)
 // It prevents simple scrapers from stealing it on GitHub.
-const SECRET_KEY = "3uduk5Np_zpDNu3jJdvyy-pQMTPiQk90tskyAysaziA";
+const SECRET_KEY = "kuQ5Npz_DNj3Jdvyy-pQMPTKiQ90tskyAsaziA";
 
 // Helper to unscramble the key
 function unscramble(str) {
