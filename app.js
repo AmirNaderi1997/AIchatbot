@@ -12,6 +12,16 @@ const welcomeScreen = document.getElementById('welcomeScreen');
 const userInput = document.getElementById('userInput');
 const sendBtn = document.getElementById('sendBtn');
 const typingIndicator = document.getElementById('typingIndicator');
+const settingsModal = document.getElementById('settingsModal');
+const apiKeyInput = document.getElementById('apiKeyInput');
+const saveApiKeyBtn = document.getElementById('saveApiKey');
+
+// Initialize
+if (!apiKey) {
+    showModal();
+} else {
+    apiKeyInput.value = apiKey;
+}
 
 
 // Event Listeners
@@ -28,8 +38,31 @@ userInput.addEventListener('input', () => {
     userInput.style.height = userInput.scrollHeight + 'px';
 });
 
+saveApiKeyBtn.addEventListener('click', saveApiKey);
+window.addEventListener('click', (e) => {
+    if (e.target === settingsModal) hideModal();
+});
+
 
 // Functions
+function showModal() {
+    settingsModal.classList.add('active');
+}
+
+function hideModal() {
+    settingsModal.classList.remove('active');
+}
+
+function saveApiKey() {
+    const val = apiKeyInput.value.trim();
+    if (val) {
+        apiKey = val;
+        localStorage.setItem('glowai_api_key', val);
+        hideModal();
+    } else {
+        alert('Please enter a valid API key');
+    }
+}
 
 function setQuickPrompt(text) {
     userInput.value = text;

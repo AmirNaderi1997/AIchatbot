@@ -74,6 +74,23 @@
         </footer>
     </div>
 
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-key"></i> API Configuration</h3>
+            <p>To use GlowAI, you need a Google Gemini API Key. It's free and takes 30 seconds to get.</p>
+            <div class="input-group">
+                <label for="apiKeyInput">Gemini API Key</label>
+                <input type="password" id="apiKeyInput" placeholder="Enter your API key...">
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="get-key-link">Get a free key
+                    here <i class="fas fa-external-link-alt"></i></a>
+            </div>
+            <div class="modal-footer">
+                <button id="saveApiKey" class="primary-btn">Save & Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="config.js"></script>
     <script src="app.js"></script>
 </body>
