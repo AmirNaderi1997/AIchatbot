@@ -1,16 +1,17 @@
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+// RapidAPI Configuration
+// IMPORTANT: Copy config.js.example to config.js and add your RapidAPI key
+// DO NOT commit your actual API key to GitHub
+const RAPIDAPI_URL = 'https://flux-api-4-custom-models-100-style.p.rapidapi.com/motivational-speech';
 
-// This is your OBFUSCATED Gemini API key (Base64 + Reversed)
-// It prevents simple scrapers from stealing it on GitHub.
-const SECRET_KEY = "kuQ5Npz_DNj3Jdvyy-pQMPTiQk90tskyAySazIA"; // v1.0.1
-
-// Helper to unscramble the key
-function unscramble(str) {
-    return str.split("").reverse().join("");
+// Try to load API key from config.js if it exists
+let apiKey = null;
+try {
+    if (typeof CONFIG !== 'undefined' && CONFIG.RAPIDAPI_KEY) {
+        apiKey = CONFIG.RAPIDAPI_KEY;
+    }
+} catch (e) {
+    // config.js not found or invalid, apiKey remains null
 }
-
-// Automatically set the API key on load
-let apiKey = unscramble(SECRET_KEY);
 
 // DOM Elements
 const chatWindow = document.getElementById('chatWindow');
@@ -42,7 +43,12 @@ function setQuickPrompt(text) {
 
 async function handleSend() {
     const text = userInput.value.trim();
-    if (!text || !apiKey) return;
+    if (!text) return;
+
+    if (!apiKey) {
+        addMessage('**Error:** API key not configured. Please copy config.js.example to config.js and add your RapidAPI key.', 'ai');
+        return;
+    }
 
     if (welcomeScreen) {
         welcomeScreen.remove();
@@ -56,7 +62,7 @@ async function handleSend() {
     showTyping(true);
 
     try {
-        const response = await callGeminiAPI(text);
+        const response = await callRapidAPI(text);
         showTyping(false);
         addMessage(response, 'ai');
     } catch (error) {
@@ -106,30 +112,24 @@ function addMessage(text, sender) {
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
-async function callGeminiAPI(prompt) {
-    const body = {
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 2048,
-        }
-    };
-
-    const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+async function callRapidAPI(prompt) {
+    const response = await fetch(RAPIDAPI_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
+        headers: {
+            'Content-Type': 'application/json',
+            'x-rapidapi-host': 'flux-api-4-custom-models-100-style.p.rapidapi.com',
+            'x-rapidapi-key': apiKey
+        },
+        body: JSON.stringify({ prompt: prompt })
     });
 
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Failed to fetch response');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to fetch response');
     }
 
     const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    return data;
 }
 
 marked.setOptions({
@@ -141,3 +141,4 @@ marked.setOptions({
     },
     breaks: true
 });
+
